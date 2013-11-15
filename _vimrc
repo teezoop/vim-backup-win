@@ -20,13 +20,11 @@ Bundle 'Shougo/neosnippet'
 """"""""2: vim-scripts repos
 "Bundle 'L9'
 
-
 """"""""3: non-GitHub repos
 "Bundle 'git://git.wincent.com/command-t.git'
 
 """"""""4: Git repos on your local machine (i.e. when working on your own plugin)
 "Bundle 'file:///Users/gmarik/path/to/plugin'
-" ...
 
 filetype plugin indent on     " required!
 "
@@ -102,48 +100,46 @@ endfunction
 colors evening
 set nobackup
 
+map <C-F11> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR> 
+noremap <F11> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<cr> 
+inoremap <F11> <Esc>:!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<cr> 
 """""""""""""""""""""NeoComplCache"""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""
+let g:acp_enableAtStartup = 0
 let g:neocomplcache_enable_at_startup = 1
-
 let g:neocomplcache_enable_smart_case = 1
-" 启用大写字母补全.
 let g:neocomplcache_enable_camel_case_completion = 1
-" 启用下划线补全.
 let g:neocomplcache_enable_underbar_completion = 1
-" 设定最小语法关键词长度.
 let g:neocomplcache_min_syntax_length = 2
-
 let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-" 定义字典.
+
+" Define dictionary
 let g:neocomplcache_dictionary_filetype_lists = {
         \ 'default' : '',
-        \ 'vimshell' : $HOME.'/.vimshell_hist',
-        \ 'scheme' : $HOME.'/.gosh_completions',
-        \ 'php' : $HOME.'/.vim/dict/php.dic',
-        \ }
-"        \ 'css' : $HOME.'.vim/dict/css.dic',
-"        \ 'javascript' : $HOME.'.vim/dict/javascript.dic'
+		\ 'cpp' : '$VIM/vimfiles/c-c++-support/wordlists/c-c++-keywords.dic,
+		\ $VIM/vimfiles/c-c++-support/wordlists/stl_index.dic,
+		\ $VIM/vimfiles/c-c++-support/wordlists/k+r.dic'
+        \}
 
-"include_complete be abled
-let g:neocomplcache_ctags_program = '/usr/local/bin/ctags'
+"""""include_complete be abled
+"let g:neocomplcache_ctags_program = '/usr/local/bin/ctags'
 
-" 定义关键词.
+" Define keyword.
 if !exists('g:neocomplcache_keyword_patterns')
 let g:neocomplcache_keyword_patterns = {}
 endif
 let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 
-" 插件键映射.
+" Plugin key-mappings.
 imap <C-k>     <Plug>(neocomplcache_snippets_expand)
 smap <C-k>     <Plug>(neocomplcache_snippets_expand)
 inoremap <expr><C-g>     neocomplcache#undo_completion()
 inoremap <expr><C-l>     neocomplcache#complete_common_string()
 
-" 类似于SuperTab用法 .
+"""""SuperTab like behavior.
 "imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : pumvisible() ? "\<C-n>" : "\<TAB>"
 
-" 推荐的键映射.
+""""" Recommended key-mappings.
 " <CR>: close popup and save indent.
 inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
 " <TAB>: completion. NO USE with snipmate
@@ -157,16 +153,17 @@ inoremap <expr><C-e>  neocomplcache#cancel_popup()
 "inoremap <expr><Enter>  pumvisible() ? neocomplcache#close_popup()."\<C-n>" : "\<Enter>"
 "inoremap <expr><Enter>  pumvisible() ? "\<C-Y>" : "\<Enter>"
 
-" 类似于AutoComplPop用法 .
+""""" AutoComplPop like behavior .
 "let g:neocomplcache_enable_auto_select = 1
-" 类似于 Shell 用法(不推荐).
+
+""""" Shell like behavior(not recommended).
 "set completeopt+=longest
 "let g:neocomplcache_enable_auto_select = 1
 "let g:neocomplcache_disable_auto_complete = 1
 "inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<TAB>"
 "inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
 
-" 启用 omni 补全.
+""""" Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
@@ -175,7 +172,7 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 "autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP "vim默认
 "autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 
-" 启用 heavy omni 补全.
+""""" Enable heavy omni completion.
 if !exists('g:neocomplcache_omni_patterns')
         let g:neocomplcache_omni_patterns = {}
 endif
@@ -186,26 +183,17 @@ if !exists('g:neocomplcache_force_omni_patterns')
         let g:neocomplcache_force_omni_patterns = {}
 endif
 
-"let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-"let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+"let g:neocomplcache_force_overwrite_completefunc = 1
+let g:neocomplcache_force_omni_patterns.c = '\%(\.\|->\)\h\w*'
+let g:neocomplcache_force_omni_patterns.cpp =  '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
 
-" 兼容clang_complete
-let g:neocomplcache_force_overwrite_completefunc = 1
-let g:neocomplcache_force_omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-let g:neocomplcache_force_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-let g:neocomplcache_force_omni_patterns.objc = '[^.[:digit:] *\t]\%(\.\|->\)'
-let g:neocomplcache_force_omni_patterns.objcpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 
-" 兼容jedi
-let g:neocomplcache_force_omni_patterns.python = '[^. \t]\.\w*'
-let g:neocomplcache_omni_functions.python = 'jedi#complete'
+" for c/c++
+let g:neocomplcache_include_patterns = {'c':'^\s*#\s*include','cpp':'^\s*#\s*include'}
+let g:neocomplcache_include_suffixes = {'c':'.h','cpp':'.h'}
 
-" rank sourch list
-let g:neocomplcache_source_rank = {
-        \ 'buffer_complete'     : 6,
-        \ 'dictionary_complete' : 5,
-        \ 'syntax_complete'     : 4,
-        \ }
 
 """"""""""""""""""""""NeoSnippet""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""
